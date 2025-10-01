@@ -332,7 +332,7 @@ generators = [
     generate_type_p
 ]
 
-def generate_problems_and_answers(n=10):
+def generate_problems_and_answers(n=40):
     problems = []
     for _ in range(n):
         gen = random.choice(generators)
@@ -342,7 +342,7 @@ def generate_problems_and_answers(n=10):
 
 # --- API ---
 @app.get("/generate")
-def generate_api(n: int = 5):
+def generate_api(n: int = 20):
     global current_problems
     current_problems = generate_problems_and_answers(n)  # 保存
     return JSONResponse(content=current_problems)
