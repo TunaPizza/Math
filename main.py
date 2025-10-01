@@ -1,7 +1,5 @@
 from fastapi import FastAPI, Query
-from fastapi.responses import FileResponse, HTMLResponse
-from fastapi.staticfiles import StaticFiles
-
+from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
 import random
 from fractions import Fraction
 from reportlab.pdfgen import canvas
@@ -15,32 +13,29 @@ pdfmetrics.registerFont(UnicodeCIDFont("HeiseiMin-W3"))
 
 app = FastAPI()
 
-# ===== 静的ファイル用ディレクトリ（必要に応じて） =====
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# ===== ここに一次関数問題生成関数群 =====
+# ---------------------
+# ユーティリティ関数
+# ---------------------
 def non_zero_int(a, b):
     n = 0
     while n == 0:
         n = random.randint(a, b)
     return n
 
-def frac_str(f):
+def frac_str(f: Fraction):
     if f.denominator == 1:
         return str(f.numerator)
     return f"{f.numerator}/{f.denominator}"
 
-def format_linear(a, b):
-    if a == 1:
-        a_str = "x"
-    elif a == -1:
-        a_str = "-x"
+def format_linear(a: Fraction, b: Fraction):
+    """一次関数の標準形 y = ax + b を文字列に変換"""
+    a_str = frac_str(a)
+    b_str = frac_str(b)
+    if b >= 0:
+        return f"y = {a_str}x + {b_str}"
     else:
-        a_str = f"{frac_str(a)}x"
-    if b < 0:
-        return f"y = {a_str} - {frac_str(abs(b))}"
-    else:
-        return f"y = {a_str} + {frac_str(b)}"
+        return f"y = {a_str}x - {abs(b.numerator)}"
+
 
 # ----- 各タイプの問題関数はここにコピー -----
 #タイプA　2点から式を決定
@@ -331,60 +326,81 @@ def generate_problems_and_answers(n=10):
     for _ in range(n):
         gen = random.choice(generators)
         p, a = gen()
-        problems.append((p, a))
+         problems.append({"problem": p, "answer": a})
     return problems
 
-def save_pdf_combined(problems, filename="linear_combined.pdf"):
+# --- API ---
+@app.get("/generate")
+def generate_api(n: int = 5):
+    problems = generate_problems_and_answers(n)
+    return JSONResponse(content=problems)
+
+@app.get("/pdf")
+def create_pdf(n: int = 5):
+    problems = generate_problems_and_answers(n)
+    filename = "linear.pdf"
     c = canvas.Canvas(filename, pagesize=A4)
     width, height = A4
     c.setFont("HeiseiMin-W3", 12)
-
-    # 問題ページ
     c.drawCentredString(width/2, height-40, "一次関数プリント（問題）")
     y = height - 80
-    for i, (p, _) in enumerate(problems):
-        c.drawString(50, y, f"{i+1}. {p}")
+    for i, p in enumerate(problems):
+        c.drawString(50, y, f"{i+1}. {p['problem']}")
         y -= 25
         if y < 50:
             c.showPage()
             c.setFont("HeiseiMin-W3", 12)
             y = height - 50
-
-    # 解答ページ
-    c.showPage()
-    c.setFont("HeiseiMin-W3", 12)
-    c.drawCentredString(width/2, height-40, "一次関数プリント（解答）")
-    y = height - 80
-    for i, (_, a) in enumerate(problems):
-        c.drawString(50, y, f"{i+1}. {a}")
-        y -= 25
-        if y < 50:
-            c.showPage()
-            c.setFont("HeiseiMin-W3", 12)
-            y = height - 50
-
     c.save()
+    return FileResponse(filename, media_type='application/pdf', filename=filename)
 
-
-# ===== FastAPI ルート =====
+# ---------------------
+# HTMLルート
+# ---------------------
 @app.get("/", response_class=HTMLResponse)
 async def index():
     return """
+    <!DOCTYPE html>
     <html>
-    <head><title>一次関数プリント生成</title></head>
+    <head>
+      <meta charset="UTF-8">
+      <title>一次関数プリント生成</title>
+      <style>
+        body { font-family: sans-serif; margin: 20px; }
+        button { margin: 5px; }
+        pre { background: #f0f0f0; padding: 10px; }
+      </style>
+    </head>
     <body>
       <h1>一次関数プリント生成</h1>
-      <form action="/generate_pdf">
-        <label>問題数: <input type="number" name="num" value="10" min="1" max="50"></label>
-        <button type="submit">PDF生成</button>
-      </form>
+      <label>問題数: <input type="number" id="num" value="5" min="1" max="50"></label><br>
+      <button id="generateBtn">問題生成</button>
+      <button id="pdfBtn">PDF作成</button>
+      <h2>生成された問題（プレビュー）</h2>
+      <pre id="preview"></pre>
+
+      <script>
+        const generateBtn = document.getElementById('generateBtn');
+        const pdfBtn = document.getElementById('pdfBtn');
+        const preview = document.getElementById('preview');
+        const numInput = document.getElementById('num');
+
+        generateBtn.addEventListener('click', async () => {
+          const n = numInput.value;
+          const res = await fetch(`/generate?n=${n}`);
+          const data = await res.json();
+          let text = "";
+          data.forEach((p, i) => {
+            text += (i+1) + ". " + p.problem + "\\n";
+          });
+          preview.textContent = text;
+        });
+
+        pdfBtn.addEventListener('click', () => {
+          const n = numInput.value;
+          window.open(`/pdf?n=${n}`, '_blank');
+        });
+      </script>
     </body>
     </html>
     """
-
-@app.get("/generate_pdf")
-async def generate_pdf(num: int = Query(10, ge=1, le=50)):
-    problems = generate_problems_and_answers(num)
-    filename = "linear_combined.pdf"
-    save_pdf_combined(problems, filename)
-    return FileResponse(filename, media_type="application/pdf", filename=filename)

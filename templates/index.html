@@ -1,67 +1,34 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>一次関数問題生成サイト</title>
-<style>
-  body { font-family: sans-serif; padding: 20px; }
-  #problems { margin-top: 20px; }
-  .problem { margin-bottom: 10px; }
-</style>
+  <meta charset="UTF-8">
+  <title>一次関数プリント</title>
 </head>
 <body>
-<h1>一次関数プリント生成</h1>
+  <h1>一次関数プリント</h1>
 
-<label>生成する問題数：
-<input type="number" id="num" value="10" min="1" max="100">
-</label>
-<button id="generate">問題を生成</button>
+  <button onclick="loadProblems()">問題生成</button>
+  <button onclick="downloadPDF()">PDF作成</button>
 
-<div id="problems"></div>
+  <ol id="problems-list"></ol>
 
-<button id="download" style="display:none;">PDFをダウンロード</button>
+  <script>
+    async function loadProblems() {
+      const response = await fetch("/generate?n=5");
+      const problems = await response.json();
+      const list = document.getElementById("problems-list");
+      list.innerHTML = "";
+      problems.forEach((p, i) => {
+        const li = document.createElement("li");
+        li.textContent = p.problem;
+        list.appendChild(li);
+      });
+    }
 
-<script>
-let currentProblems = [];
-
-document.getElementById("generate").onclick = async () => {
-    const num = document.getElementById("num").value;
-    const formData = new FormData();
-    formData.append("num", num);
-
-    const res = await fetch("/generate", {
-        method: "POST",
-        body: formData
-    });
-    const problems = await res.json();
-    currentProblems = problems;
-
-    const div = document.getElementById("problems");
-    div.innerHTML = "<h2>生成された問題</h2>";
-    problems.forEach((p, idx) => {
-        const el = document.createElement("div");
-        el.className = "problem";
-        el.textContent = `${idx+1}. ${p.problem}`;
-        div.appendChild(el);
-    });
-
-    document.getElementById("download").style.display = "inline-block";
-};
-
-document.getElementById("download").onclick = async () => {
-    const res = await fetch("/download", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(currentProblems)
-    });
-    const blob = await res.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "linear_problems.pdf";
-    a.click();
-    window.URL.revokeObjectURL(url);
-};
-</script>
+    function downloadPDF() {
+      const n = 5;
+      window.open(`/pdf?n=${n}`, "_blank");
+    }
+  </script>
 </body>
 </html>
