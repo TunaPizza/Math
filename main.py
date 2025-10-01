@@ -326,7 +326,7 @@ def generate_problems_and_answers(n=10):
     for _ in range(n):
         gen = random.choice(generators)
         p, a = gen()
-         problems.append({"problem": p, "answer": a})
+        problems.append({"problem": p, "answer": a})
     return problems
 
 # --- API ---
