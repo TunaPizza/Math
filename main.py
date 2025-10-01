@@ -18,25 +18,34 @@ current_problems = []
 # ---------------------
 # ユーティリティ関数
 # ---------------------
+# 0を除く整数
 def non_zero_int(a, b):
     n = 0
     while n == 0:
         n = random.randint(a, b)
     return n
 
-def frac_str(f: Fraction):
+# 分数表記で文字列化
+def frac_str(f):
     if f.denominator == 1:
         return str(f.numerator)
     return f"{f.numerator}/{f.denominator}"
 
-def format_linear(a: Fraction, b: Fraction):
-    """一次関数の標準形 y = ax + b を文字列に変換"""
-    a_str = frac_str(a)
-    b_str = frac_str(b)
-    if b >= 0:
-        return f"y = {a_str}x + {b_str}"
+#答えのパターンによって表記の仕方を変更
+def format_linear(a, b):
+    # 傾き部分
+    if a == 1:
+        a_str = "x"
+    elif a == -1:
+        a_str = "-x"
     else:
-        return f"y = {a_str}x - {abs(b.numerator)}"
+        a_str = f"{frac_str(a)}x"
+
+    # 切片部分
+    if b < 0:
+        return f"y = {a_str} - {frac_str(abs(b))}"
+    else:
+        return f"y = {a_str} + {frac_str(b)}"
 
 
 # ----- 各タイプの問題関数はここにコピー -----
