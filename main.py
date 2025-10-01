@@ -13,6 +13,8 @@ pdfmetrics.registerFont(UnicodeCIDFont("HeiseiMin-W3"))
 
 app = FastAPI()
 
+current_problems = []
+
 # ---------------------
 # ユーティリティ関数
 # ---------------------
@@ -332,19 +334,24 @@ def generate_problems_and_answers(n=10):
 # --- API ---
 @app.get("/generate")
 def generate_api(n: int = 5):
-    problems = generate_problems_and_answers(n)
-    return JSONResponse(content=problems)
+    global current_problems
+    current_problems = generate_problems_and_answers(n)  # 保存
+    return JSONResponse(content=current_problems)
 
 @app.get("/pdf")
-def create_pdf(n: int = 5):
-    problems = generate_problems_and_answers(n)
+def create_pdf():
+    global current_problems
+    if not current_problems:
+        return JSONResponse(content={"error": "先に問題を生成してください"}, status_code=400)
+    
     filename = "linear.pdf"
     c = canvas.Canvas(filename, pagesize=A4)
     width, height = A4
     c.setFont("HeiseiMin-W3", 12)
+
     c.drawCentredString(width/2, height-40, "一次関数プリント（問題）")
     y = height - 80
-    for i, p in enumerate(problems):
+    for i, p in enumerate(current_problems):
         c.drawString(50, y, f"{i+1}. {p['problem']}")
         y -= 25
         if y < 50:
@@ -353,7 +360,6 @@ def create_pdf(n: int = 5):
             y = height - 50
     c.save()
     return FileResponse(filename, media_type='application/pdf', filename=filename)
-
 # ---------------------
 # HTMLルート
 # ---------------------

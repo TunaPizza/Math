@@ -13,22 +13,27 @@
   <ol id="problems-list"></ol>
 
   <script>
-    async function loadProblems() {
-      const response = await fetch("/generate?n=5");
-      const problems = await response.json();
-      const list = document.getElementById("problems-list");
-      list.innerHTML = "";
-      problems.forEach((p, i) => {
-        const li = document.createElement("li");
-        li.textContent = p.problem;
-        list.appendChild(li);
-      });
-    }
+  let currentProblems = []; // 生成済み問題を保持
 
-    function downloadPDF() {
-      const n = 5;
-      window.open(`/pdf?n=${n}`, "_blank");
+  document.getElementById("generateBtn").addEventListener("click", async () => {
+    const n = document.getElementById("num").value || 5;
+    const res = await fetch(`/generate?n=${n}`);
+    if (res.ok) {
+      currentProblems = await res.json(); // 保存
+      displayProblems(currentProblems);
+    } else {
+      alert("問題生成に失敗しました");
     }
-  </script>
+  });
+
+  document.getElementById("pdfBtn").addEventListener("click", () => {
+    if (currentProblems.length === 0) {
+      alert("先に問題を生成してください");
+      return;
+    }
+    window.open("/pdf", "_blank"); // 生成済み問題でPDF作成
+  });
+</script>
+
 </body>
 </html>
