@@ -6,6 +6,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+from datetime import datetime
 import os
 
 # 日本語フォント登録
@@ -348,10 +349,15 @@ def generate_api(n: int = 20):
     return JSONResponse(content=current_problems)
 
 @app.get("/pdf")
-def save_pdf_combined(filename="linear_combined.pdf"):
-    global current_problems
-    if not current_problems:
-        return JSONResponse(content={"error": "先に問題を生成してください"}, status_code=400)
+def save_pdf_combined(n: int = 5, filename: str = None):
+    # filename 未指定なら自動生成
+    if not filename:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"linear_{timestamp}.pdf"
+    else:
+        # 拡張子がなければ自動で付与
+        if not filename.lower().endswith(".pdf"):
+            filename += ".pdf"
 
     c = canvas.Canvas(filename, pagesize=A4)
     width, height = A4
@@ -360,8 +366,8 @@ def save_pdf_combined(filename="linear_combined.pdf"):
     # --- 問題ページ ---
     c.drawCentredString(width/2, height-40, "一次関数プリント（問題）")
     y = height - 80
-    for i, item in enumerate(current_problems):
-        c.drawString(50, y, f"{i+1}. {item['problem']}")
+    for i, (p, _) in enumerate(current_problems[:n]):
+        c.drawString(50, y, f"{i+1}. {p}")
         y -= 25
         if y < 50:
             c.showPage()
@@ -373,8 +379,8 @@ def save_pdf_combined(filename="linear_combined.pdf"):
     c.setFont("HeiseiMin-W3", 12)
     c.drawCentredString(width/2, height-40, "一次関数プリント（解答）")
     y = height - 80
-    for i, item in enumerate(current_problems):
-        c.drawString(50, y, f"{i+1}. {item['answer']}")
+    for i, (_, a) in enumerate(current_problems[:n]):
+        c.drawString(50, y, f"{i+1}. {a}")
         y -= 25
         if y < 50:
             c.showPage()
@@ -405,6 +411,7 @@ async def index():
       <h1>一次関数プリント生成</h1>
       <label>問題数: <input type="number" id="num" value="20" min="1" max="100"></label><br>
       <button id="generateBtn">問題生成</button>
+      <label>PDFファイル名: <input type="text" id="pdfName" placeholder="未入力時は自動生成"></label><br>
       <button id="pdfBtn">PDF作成</button>
       <h2>生成された問題（プレビュー）</h2>
       <pre id="preview"></pre>
@@ -428,7 +435,12 @@ async def index():
 
         pdfBtn.addEventListener('click', () => {
           const n = numInput.value;
-          window.open(`/pdf?n=${n}`, '_blank');
+          const filename = document.getElementById('pdfName').value;
+          if (filename) {
+            window.open(`/pdf?n=${n}&filename=${encodeURIComponent(filename)}`, '_blank');
+          } else {
+            window.open(`/pdf?n=${n}`, '_blank');
+          }
         });
       </script>
     </body>
