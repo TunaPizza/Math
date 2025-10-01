@@ -332,7 +332,7 @@ generators = [
     generate_type_p
 ]
 
-def generate_problems_and_answers(n=40):
+def generate_problems_and_answers(n=20):
     problems = []
     for _ in range(n):
         gen = random.choice(generators)
@@ -403,7 +403,7 @@ async def index():
     </head>
     <body>
       <h1>一次関数プリント生成</h1>
-      <label>問題数: <input type="number" id="num" value="5" min="1" max="50"></label><br>
+      <label>問題数: <input type="number" id="num" value="20" min="1" max="100"></label><br>
       <button id="generateBtn">問題生成</button>
       <button id="pdfBtn">PDF作成</button>
       <h2>生成された問題（プレビュー）</h2>
