@@ -464,7 +464,7 @@ def save_pdf_combined(filename="linear_combined.pdf"):
     return FileResponse(filename, media_type='application/pdf', filename=filename)
 
 
-    @app.get("/pdf_fraction")
+@app.get("/pdf_fraction")
 async def pdf_fraction(n: int = 20):
     pdfmetrics.registerFont(UnicodeCIDFont("HeiseiMin-W3"))
 
