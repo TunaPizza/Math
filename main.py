@@ -385,21 +385,38 @@ def generate_problems_and_answers(n=20):
         problems.append({"problem": p, "answer": a})
     return problems
 
-def generate_fraction_problems(n=20):
+from fractions import Fraction
+import random
+
+# ---------------------
+# 分数計算問題生成
+# ---------------------
+def generate_fraction_problem():
+    # 分数の足し算・引き算・掛け算・割り算
+    a = Fraction(random.randint(1, 9), random.randint(1, 9))
+    b = Fraction(random.randint(1, 9), random.randint(1, 9))
+    op = random.choice(["+", "-", "×", "÷"])
+
+    if op == "+":
+        ans = a + b
+    elif op == "-":
+        ans = a - b
+    elif op == "×":
+        ans = a * b
+    else:
+        ans = a / b
+
+    problem = f"{a} {op} {b} ="
+    answer = str(ans)
+    return problem, answer
+
+
+@app.get("/generate_fraction")
+async def generate_fraction_api(n: int = 20):
     problems = []
     for _ in range(n):
-        a = Fraction(random.randint(1, 9), random.randint(1, 9))
-        b = Fraction(random.randint(1, 9), random.randint(1, 9))
-        op = random.choice(["＋", "－", "×", "÷"])
-        if op == "＋":
-            ans = a + b
-        elif op == "－":
-            ans = a - b
-        elif op == "×":
-            ans = a * b
-        else:
-            ans = a / b
-        problems.append((f"{a} {op} {b}", str(ans)))
+        p, a = generate_fraction_problem()
+        problems.append({"problem": p, "answer": a})
     return problems
 
 # --- API ---
@@ -445,6 +462,33 @@ def save_pdf_combined(filename="linear_combined.pdf"):
 
     c.save()
     return FileResponse(filename, media_type='application/pdf', filename=filename)
+
+
+    @app.get("/pdf_fraction")
+async def pdf_fraction(n: int = 20):
+    pdfmetrics.registerFont(UnicodeCIDFont("HeiseiMin-W3"))
+
+    buffer = io.BytesIO()
+    c = canvas.Canvas(buffer, pagesize=A4)
+    width, height = A4
+    c.setFont("HeiseiMin-W3", 14)
+
+    problems = [generate_fraction_problem()[0] for _ in range(n)]
+    x, y = 50, height - 50
+
+    for i, p in enumerate(problems, 1):
+        c.drawString(x, y, f"{i}. {p}")
+        y -= 20
+        if y < 50:
+            c.showPage()
+            c.setFont("HeiseiMin-W3", 14)
+            y = height - 50
+
+    c.save()
+    buffer.seek(0)
+    return StreamingResponse(buffer, media_type="application/pdf", headers={
+        "Content-Disposition": "inline; filename=fraction_problems.pdf"
+    })
 
 # ---------------------
 # HTMLルート
