@@ -385,6 +385,23 @@ def generate_problems_and_answers(n=20):
         problems.append({"problem": p, "answer": a})
     return problems
 
+def generate_fraction_problems(n=20):
+    problems = []
+    for _ in range(n):
+        a = Fraction(random.randint(1, 9), random.randint(1, 9))
+        b = Fraction(random.randint(1, 9), random.randint(1, 9))
+        op = random.choice(["＋", "－", "×", "÷"])
+        if op == "＋":
+            ans = a + b
+        elif op == "－":
+            ans = a - b
+        elif op == "×":
+            ans = a * b
+        else:
+            ans = a / b
+        problems.append((f"{a} {op} {b}", str(ans)))
+    return problems
+
 # --- API ---
 @app.get("/generate")
 def generate_api(n: int = 20):
