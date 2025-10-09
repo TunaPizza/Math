@@ -367,7 +367,7 @@ def generate_type_s():
     
     return problem, answer
 
-  def generate_type_frac():
+def generate_type_frac():
     a, b = random.randint(1, 9), random.randint(1, 9)
     return f"{a}/{b} + 1/2 = ?", f"{a + b//2}/{b}"
 
