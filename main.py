@@ -496,3 +496,54 @@ async def index():
     </body>
     </html>
     """
+
+    # ---------------------
+# 分数計算プリントのHTMLルート
+# ---------------------
+@app.get("/fraction", response_class=HTMLResponse)
+async def fraction_page():
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>分数の計算プリント生成</title>
+      <style>
+        body { font-family: sans-serif; margin: 20px; }
+        button { margin: 5px; }
+        pre { background: #f0f0f0; padding: 10px; }
+      </style>
+    </head>
+    <body>
+      <h1>分数の計算プリント生成</h1>
+      <label>問題数: <input type="number" id="num" value="20" min="1" max="100"></label><br>
+      <button id="generateBtn">問題生成</button>
+      <button id="pdfBtn">PDF作成</button>
+      <h2>生成された問題（プレビュー）</h2>
+      <pre id="preview"></pre>
+
+      <script>
+        const generateBtn = document.getElementById('generateBtn');
+        const pdfBtn = document.getElementById('pdfBtn');
+        const preview = document.getElementById('preview');
+        const numInput = document.getElementById('num');
+
+        generateBtn.addEventListener('click', async () => {
+          const n = numInput.value;
+          const res = await fetch(`/generate_fraction?n=${n}`);
+          const data = await res.json();
+          let text = "";
+          data.forEach((p, i) => {
+            text += (i+1) + ". " + p.problem + "\\n";
+          });
+          preview.textContent = text;
+        });
+
+        pdfBtn.addEventListener('click', () => {
+          const n = numInput.value;
+          window.open(`/pdf_fraction?n=${n}`, '_blank');
+        });
+      </script>
+    </body>
+    </html>
+    """
