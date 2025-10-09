@@ -382,7 +382,7 @@ def generate_problems(problem_type="linear", n=20):
     generate_type_p, generate_type_q, generate_type_r
 ]
     elif problem_type == "fraction":
-        generators = [generate_fraction_problem]
+        generators = [generate_type_frac]
     else:
         return []
 
