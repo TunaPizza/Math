@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Query
-from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
+from fastapi.responses import JSONResponse, FileResponse, HTMLResponse, StreamingResponse
 import random
 from fractions import Fraction
 from reportlab.pdfgen import canvas
@@ -7,6 +7,8 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 import os
+import io
+
 
 # 日本語フォント登録
 pdfmetrics.registerFont(UnicodeCIDFont("HeiseiMin-W3"))
