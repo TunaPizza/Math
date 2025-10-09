@@ -2,24 +2,38 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>分数の計算プリント</title>
+  <title>分数プリント</title>
 </head>
 <body>
-  <h1>分数の計算プリント作成</h1>
-  <button id="pdfBtn">PDF作成</button>
+  <h1>分数プリント</h1>
+
+  <button onclick="loadProblems()">問題生成</button>
+  <button onclick="downloadPDF()">PDF作成</button>
+
+  <ol id="problems-list"></ol>
 
   <script>
-    document.getElementById("pdfBtn").addEventListener("click", () => {
-      fetch("/generate_fraction_pdf", { method: "POST" })
-        .then(res => res.blob())
-        .then(blob => {
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "fraction.pdf";
-          a.click();
-        });
-    });
-  </script>
+  let currentProblems = []; // 生成済み問題を保持
+
+  document.getElementById("generateBtn").addEventListener("click", async () => {
+    const n = document.getElementById("num").value || 5;
+    const res = await fetch(`/generate?n=${n}&problem_type=fraction`);
+    if (res.ok) {
+      currentProblems = await res.json(); // 保存
+      displayProblems(currentProblems);
+    } else {
+      alert("問題生成に失敗しました");
+    }
+  });
+
+  document.getElementById("pdfBtn").addEventListener("click", () => {
+    if (currentProblems.length === 0) {
+      alert("先に問題を生成してください");
+      return;
+    }
+    window.open("/pdf", "_blank"); // 生成済み問題でPDF作成
+  });
+</script>
+
 </body>
 </html>

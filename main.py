@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Query
-from fastapi.responses import JSONResponse, FileResponse, HTMLResponse, StreamingResponse
+from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
 import random
 from fractions import Fraction
 from reportlab.pdfgen import canvas
@@ -7,8 +7,6 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 import os
-import io
-
 
 # 日本語フォント登録
 pdfmetrics.registerFont(UnicodeCIDFont("HeiseiMin-W3"))
@@ -369,17 +367,25 @@ def generate_type_s():
     
     return problem, answer
 
+  def generate_type_frac():
+    a, b = random.randint(1, 9), random.randint(1, 9)
+    return f"{a}/{b} + 1/2 = ?", f"{a + b//2}/{b}"
 
-# ========== 問題生成関数群 ==========
-generators = [
+# --- 汎用問題生成 ---
+def generate_problems(problem_type="linear", n=20):
+    if problem_type == "linear":
+        generators = [
     generate_type_a, generate_type_b, generate_type_c, generate_type_d,
     generate_type_e, generate_type_f, generate_type_g,
     generate_type_h, generate_type_i, generate_type_j, generate_type_k,
     generate_type_l, generate_type_m, generate_type_n,generate_type_o,
     generate_type_p, generate_type_q, generate_type_r
 ]
+    elif problem_type == "fraction":
+        generators = [generate_fraction_problem]
+    else:
+        return []
 
-def generate_problems_and_answers(n=20):
     problems = []
     for _ in range(n):
         gen = random.choice(generators)
@@ -387,49 +393,19 @@ def generate_problems_and_answers(n=20):
         problems.append({"problem": p, "answer": a})
     return problems
 
-from fractions import Fraction
-import random
+# --- 現在の問題を保持 ---
+current_problems = []
 
-# ---------------------
-# 分数計算問題生成
-# ---------------------
-def generate_fraction_problem():
-    # 分数の足し算・引き算・掛け算・割り算
-    a = Fraction(random.randint(1, 9), random.randint(1, 9))
-    b = Fraction(random.randint(1, 9), random.randint(1, 9))
-    op = random.choice(["+", "-", "×", "÷"])
-
-    if op == "+":
-        ans = a + b
-    elif op == "-":
-        ans = a - b
-    elif op == "×":
-        ans = a * b
-    else:
-        ans = a / b
-
-    problem = f"{a} {op} {b} ="
-    answer = str(ans)
-    return problem, answer
-
-
-@app.get("/generate_fraction")
-async def generate_fraction_api(n: int = 20):
-    problems = []
-    for _ in range(n):
-        p, a = generate_fraction_problem()
-        problems.append({"problem": p, "answer": a})
-    return problems
-
-# --- API ---
+# --- 問題生成 API ---
 @app.get("/generate")
-def generate_api(n: int = 20):
+def generate_api(n: int = 20, problem_type: str = "linear"):
     global current_problems
-    current_problems = generate_problems_and_answers(n)  # 保存
+    current_problems = generate_problems(problem_type, n)
     return JSONResponse(content=current_problems)
 
+# --- PDF 作成 API ---
 @app.get("/pdf")
-def save_pdf_combined(filename="linear_combined.pdf"):
+def save_pdf_combined(filename="problems.pdf"):
     global current_problems
     if not current_problems:
         return JSONResponse(content={"error": "先に問題を生成してください"}, status_code=400)
@@ -438,8 +414,8 @@ def save_pdf_combined(filename="linear_combined.pdf"):
     width, height = A4
     c.setFont("HeiseiMin-W3", 12)
 
-    # --- 問題ページ ---
-    c.drawCentredString(width/2, height-40, "一次関数プリント（問題）")
+    # 問題ページ
+    c.drawCentredString(width/2, height-40, "プリント（問題）")
     y = height - 80
     for i, item in enumerate(current_problems):
         c.drawString(50, y, f"{i+1}. {item['problem']}")
@@ -449,10 +425,10 @@ def save_pdf_combined(filename="linear_combined.pdf"):
             c.setFont("HeiseiMin-W3", 12)
             y = height - 50
 
-    # --- 解答ページ ---
+    # 解答ページ
     c.showPage()
     c.setFont("HeiseiMin-W3", 12)
-    c.drawCentredString(width/2, height-40, "一次関数プリント（解答）")
+    c.drawCentredString(width/2, height-40, "プリント（解答）")
     y = height - 80
     for i, item in enumerate(current_problems):
         c.drawString(50, y, f"{i+1}. {item['answer']}")
@@ -464,33 +440,6 @@ def save_pdf_combined(filename="linear_combined.pdf"):
 
     c.save()
     return FileResponse(filename, media_type='application/pdf', filename=filename)
-
-
-@app.get("/pdf_fraction")
-async def pdf_fraction(n: int = 20):
-    pdfmetrics.registerFont(UnicodeCIDFont("HeiseiMin-W3"))
-
-    buffer = io.BytesIO()
-    c = canvas.Canvas(buffer, pagesize=A4)
-    width, height = A4
-    c.setFont("HeiseiMin-W3", 14)
-
-    problems = [generate_fraction_problem()[0] for _ in range(n)]
-    x, y = 50, height - 50
-
-    for i, p in enumerate(problems, 1):
-        c.drawString(x, y, f"{i}. {p}")
-        y -= 20
-        if y < 50:
-            c.showPage()
-            c.setFont("HeiseiMin-W3", 14)
-            y = height - 50
-
-    c.save()
-    buffer.seek(0)
-    return StreamingResponse(buffer, media_type="application/pdf", headers={
-        "Content-Disposition": "inline; filename=fraction_problems.pdf"
-    })
 
 # ---------------------
 # HTMLルート
@@ -543,17 +492,18 @@ async def index():
     </html>
     """
 
-    # ---------------------
-# 分数計算プリントのHTMLルート
 # ---------------------
+# HTMLルート
+# ---------------------
+
 @app.get("/fraction", response_class=HTMLResponse)
-async def fraction_page():
+async def fravtions():
     return """
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="UTF-8">
-      <title>分数の計算プリント生成</title>
+      <title> 分数プリント生成</title>
       <style>
         body { font-family: sans-serif; margin: 20px; }
         button { margin: 5px; }
@@ -561,7 +511,7 @@ async def fraction_page():
       </style>
     </head>
     <body>
-      <h1>分数の計算プリント生成</h1>
+      <h1>分数プリント生成</h1>
       <label>問題数: <input type="number" id="num" value="20" min="1" max="100"></label><br>
       <button id="generateBtn">問題生成</button>
       <button id="pdfBtn">PDF作成</button>
@@ -576,7 +526,7 @@ async def fraction_page():
 
         generateBtn.addEventListener('click', async () => {
           const n = numInput.value;
-          const res = await fetch(`/generate_fraction?n=${n}`);
+          const res = await fetch(`/generate?n=${n}&problem_type=fraction`);
           const data = await res.json();
           let text = "";
           data.forEach((p, i) => {
@@ -587,7 +537,7 @@ async def fraction_page():
 
         pdfBtn.addEventListener('click', () => {
           const n = numInput.value;
-          window.open(`/pdf_fraction?n=${n}`, '_blank');
+          window.open(`/pdf?n=${n}`, '_blank');
         });
       </script>
     </body>
