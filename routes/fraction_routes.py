@@ -79,3 +79,6 @@ def fraction_pdf(filename="fraction.pdf"):
             c.showPage()
             c.setFont("HeiseiMin-W3", 12)
             y = height - 50
+    c.save()
+    return FileResponse(filename, media_type='application/pdf', filename=filename)
+
