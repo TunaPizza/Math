@@ -20,7 +20,7 @@ def generate_problems_and_answers(n=20):
         problems.append({"problem": p, "answer": a})
     return problems
 
-@router.get("/fraction", response_class=HTMLResponse)
+@router.get("/", response_class=HTMLResponse)
 async def fraction_page():
     return """
     <!DOCTYPE html>
@@ -45,13 +45,13 @@ async def fraction_page():
     </html>
     """
 
-@router.get("/fraction/generate")
+@router.get("/generate")
 def fraction_generate(n: int = 20):
     global current_problems
     current_problems = generate_problems_and_answers(n)
     return JSONResponse(content=current_problems)
 
-@router.get("/fraction/pdf")
+@router.get("/pdf")
 def fraction_pdf(filename="fraction.pdf"):
     global current_problems
     if not current_problems:

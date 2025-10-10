@@ -20,7 +20,7 @@ def generate_problems_and_answers(n=20):
         problems.append({"problem": p, "answer": a})
     return problems
 
-@router.get("/linear", response_class=HTMLResponse)
+@router.get("/", response_class=HTMLResponse)
 async def linear_page():
     return """
     <!DOCTYPE html>
@@ -45,13 +45,13 @@ async def linear_page():
     </html>
     """
 
-@router.get("/linear/generate")
+@router.get("/generate")
 def linear_generate(n: int = 20):
     global current_problems
     current_problems = generate_problems_and_answers(n)
     return JSONResponse(content=current_problems)
 
-@router.get("/linear/pdf")
+@router.get("/pdf")
 def linear_pdf(filename="linear.pdf"):
     global current_problems
     if not current_problems:
