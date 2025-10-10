@@ -1,5 +1,5 @@
-# main.py
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 from routes.linear_routes import router as linear_router
 from routes.fraction_routes import router as fraction_router
 
@@ -10,7 +10,7 @@ app.include_router(linear_router, prefix="/linear", tags=["Linear"])
 app.include_router(fraction_router, prefix="/fraction", tags=["Fraction"])
 
 # ホームページ
-@app.get("/", response_class=str)
+@app.get("/", response_class=HTMLResponse)
 async def home():
     return """
     <!DOCTYPE html>
