@@ -130,10 +130,9 @@ def generate_type_e():
   #切片0になったら再設定
     if b == 0:
       b = Fraction(non_zero_int(-5,5),1)
-    if b0 > 0:
-      problem = f"y={frac_str(a1)}x+{frac_str(b0)}に平行で、点({x1},{y1})を通る一次関数の式を求めよ。"
-    else:
-      problem = f"y={frac_str(a1)}x-{frac_str(abs(b0))}に平行で、点({x1},{y1})を通る一次関数の式を求めよ。"
+
+    line0 = format_linear(a1,b0)
+    problem = f"{line0}に平行で、点({x1},{y1})を通る一次関数の式を求めよ。"
     answer = format_linear(a2,b)
     
     return problem, answer
@@ -254,10 +253,10 @@ def generate_type_l():
   #切片0になったら再設定
     if b == 0:
       b = Fraction(non_zero_int(-5,5),1)
-    if b0 > 0:
-      problem = f"y={frac_str(a1)}x+{frac_str(b0)}に平行で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
-    else:
-      problem = f"y={frac_str(a1)}x-{frac_str(abs(b0))}に平行で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
+    
+    line0 = format_linear(a1,b0)
+
+    problem = f"{line0}に平行で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
     answer = format_linear(a2,b)
     
     return problem, answer
@@ -310,10 +309,9 @@ def generate_type_o():
   #切片0になったら再設定
     if b == 0:
       b = Fraction(non_zero_int(-5,5),1)
-    if b0 > 0:
-      problem = f"y={frac_str(a1)}x+{frac_str(b0)}に垂直で、点({x1},{y1})を通る一次関数の式を求めよ。"
-    else:
-      problem = f"y={frac_str(a1)}x-{frac_str(abs(b0))}に垂直で、点({x1},{y1})を通る一次関数の式を求めよ。"
+    
+    line0 = format_linear(a1,b0)
+    problem = f"{line0}に垂直で、点({x1},{y1})を通る一次関数の式を求めよ。"
     answer = format_linear(a2,b)
     
     return problem, answer
@@ -331,10 +329,9 @@ def generate_type_p():
   #切片0になったら再設定
     if b == 0:
       b = Fraction(non_zero_int(-5,5),1)
-    if b0 > 0:
-      problem = f"y={frac_str(a1)}x+{frac_str(b0)}に垂直で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
-    else:
-      problem = f"y={frac_str(a1)}x-{frac_str(abs(b0))}に垂直で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
+
+    line0 = format_linear(a1,b0)
+    problem = f"{line0}に垂直で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
     answer = format_linear(a2,b)
     
     return problem, answer
@@ -346,13 +343,13 @@ def generate_type_q():
   #1点決定
     x1, y1 = random.randint(-5,5), random.randint(-5,5)
   #傾き計算
-    a = Fraction(y1) - b1 
-    
-    if b1 > 0:
-      problem = f"y={frac_str(non_zero_int(-5,5))}x+{frac_str(b1)}とy軸上で交わり、点({x1},{y1})を通る一次関数の式を求めよ。"
-    else:
-      problem = f"y={frac_str(non_zero_int(-5,5))}x-{frac_str(abs(b1))}とy軸上で交わり、点({x1},{y1})を通る一次関数の式を求めよ。"
-    answer = format_linear(a,b2)
+    a2 = Fraction(y1) - b1 
+    a1 = Fraction(non_zero_int(-5,5),1)
+
+    line1 = format_linear(a1,b1)
+
+    problem = f"{line1}とy軸上で交わり、点({x1},{y1})を通る一次関数の式を求めよ。"
+    answer = format_linear(a2,b2)
     
     return problem, answer
 
@@ -363,13 +360,13 @@ def generate_type_r():
   #1点決定
     x1, y1 = random.randint(-5,5), random.randint(-5,5)
   #傾き計算
-    a = Fraction(y1) - b1 
+    a2 = Fraction(y1) - b1 
+    a1 = Fraction(non_zero_int(-5,5),1)
     
-    if b1 > 0:
-      problem = f"y={frac_str(non_zero_int(-5,5))}x+{frac_str(b1)}とy軸上で交わり、x={x1}のときy={y1}となる一次関数の式を求めよ。"
-    else:
-      problem = f"y={frac_str(non_zero_int(-5,5))}x-{frac_str(abs(b1))}とy軸上で交わり、x={x1}のときy={y1}となる一次関数の式を求めよ。"
-    answer = format_linear(a,b2)
+    line1 = format_linear(a1,b1)
+
+    problem = f"{line1}とy軸上で交わり、x={x1}のときy={y1}となる一次関数の式を求めよ。"
+    answer = format_linear(a2,b2)
     
     return problem, answer
 
@@ -386,14 +383,10 @@ def generate_type_s():
     temx = -b1 / a1
     Ab = -a1 * temx
 
-    if b0 > 0 & b1 > 0:
-      problem = f"y={frac_str(a0)}+{frac_str(b0)}に平行で、直線y={frac_str(a1)}+{frac_str(b1)}とx軸と交わる一次関数の式を求めよ。"
-    elif b0 > 0 & b1 < 0:
-      problem = f"y={frac_str(a0)}+{frac_str(b0)}に平行で、直線y={frac_str(a1)}-{frac_str(abs(b1))}とx軸と交わる一次関数の式を求めよ。"
-    elif b0 < 0 & b1 > 0:
-      problem = f"y={frac_str(a0)}-{frac_str(abs(b0))}に平行で、直線y={frac_str(a1)}+{frac_str(b1)}とx軸と交わる一次関数の式を求めよ。"
-    else:
-      problem = f"y={frac_str(a0)}-{frac_str(abs(b0))}に平行で、直線y={frac_str(a1)}-{frac_str(abs(b1))}とx軸と交わる一次関数の式を求めよ。"
+    line0 = format_linear(a0, b0)
+    line1 = format_linear(a1, b1)
+
+    problem = f"{line0}平行で、直線{line1}とx軸と交わる一次関数の式を求めよ。"
     answer = format_linear(Aa, Ab)
     
     return problem, answer
