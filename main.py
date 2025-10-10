@@ -132,8 +132,8 @@ def generate_type_e():
       b = Fraction(non_zero_int(-5,5),1)
     if b0 > 0:
       problem = f"y={frac_str(a1)}x+{frac_str(b0)}に平行で、点({x1},{y1})を通る一次関数の式を求めよ。"
-    elif:
-      problem = f"y={frac_str(a1)}x-{abs(frac_str(b0))}に平行で、点({x1},{y1})を通る一次関数の式を求めよ。"
+    else:
+      problem = f"y={frac_str(a1)}x-{frac_str(abs(b0))}に平行で、点({x1},{y1})を通る一次関数の式を求めよ。"
     answer = format_linear(a2,b)
     
     return problem, answer
@@ -256,8 +256,8 @@ def generate_type_l():
       b = Fraction(non_zero_int(-5,5),1)
     if b0 > 0:
       problem = f"y={frac_str(a1)}x+{frac_str(b0)}に平行で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
-    elif:
-      problem = f"y={frac_str(a1)}x-{abs(frac_str(b0))}に平行で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
+    else:
+      problem = f"y={frac_str(a1)}x-{frac_str(abs(b0))}に平行で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
     answer = format_linear(a2,b)
     
     return problem, answer
@@ -312,8 +312,8 @@ def generate_type_o():
       b = Fraction(non_zero_int(-5,5),1)
     if b0 > 0:
       problem = f"y={frac_str(a1)}x+{frac_str(b0)}に垂直で、点({x1},{y1})を通る一次関数の式を求めよ。"
-    elif:
-      problem = f"y={frac_str(a1)}x-{abs(frac_str(b0))}に垂直で、点({x1},{y1})を通る一次関数の式を求めよ。"
+    else:
+      problem = f"y={frac_str(a1)}x-{frac_str(abs(b0))}に垂直で、点({x1},{y1})を通る一次関数の式を求めよ。"
     answer = format_linear(a2,b)
     
     return problem, answer
@@ -333,8 +333,8 @@ def generate_type_p():
       b = Fraction(non_zero_int(-5,5),1)
     if b0 > 0:
       problem = f"y={frac_str(a1)}x+{frac_str(b0)}に垂直で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
-    elif:
-      problem = f"y={frac_str(a1)}x-{abs(frac_str(b0))}に垂直で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
+    else:
+      problem = f"y={frac_str(a1)}x-{frac_str(abs(b0))}に垂直で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
     answer = format_linear(a2,b)
     
     return problem, answer
@@ -350,8 +350,8 @@ def generate_type_q():
     
     if b1 > 0:
       problem = f"y={frac_str(non_zero_int(-5,5))}x+{frac_str(b1)}とy軸上で交わり、点({x1},{y1})を通る一次関数の式を求めよ。"
-    elif:
-      problem = f"y={frac_str(non_zero_int(-5,5))}x-{abs(frac_str(b1))}とy軸上で交わり、点({x1},{y1})を通る一次関数の式を求めよ。"
+    else:
+      problem = f"y={frac_str(non_zero_int(-5,5))}x-{frac_str(abs(b1))}とy軸上で交わり、点({x1},{y1})を通る一次関数の式を求めよ。"
     answer = format_linear(a,b2)
     
     return problem, answer
@@ -367,8 +367,8 @@ def generate_type_r():
     
     if b1 > 0:
       problem = f"y={frac_str(non_zero_int(-5,5))}x+{frac_str(b1)}とy軸上で交わり、x={x1}のときy={y1}となる一次関数の式を求めよ。"
-    elif:
-      problem = f"y={frac_str(non_zero_int(-5,5))}x-{abs(frac_str(b1))}とy軸上で交わり、x={x1}のときy={y1}となる一次関数の式を求めよ。"
+    else:
+      problem = f"y={frac_str(non_zero_int(-5,5))}x-{frac_str(abs(b1))}とy軸上で交わり、x={x1}のときy={y1}となる一次関数の式を求めよ。"
     answer = format_linear(a,b2)
     
     return problem, answer
@@ -392,7 +392,7 @@ def generate_type_s():
       problem = f"y={frac_str(a0)}+{frac_str(b0)}に平行で、直線y={frac_str(a1)}-{frac_str(abs(b1))}とx軸と交わる一次関数の式を求めよ。"
     elif b0 < 0 & b1 > 0:
       problem = f"y={frac_str(a0)}-{frac_str(abs(b0))}に平行で、直線y={frac_str(a1)}+{frac_str(b1)}とx軸と交わる一次関数の式を求めよ。"
-    elif:
+    else:
       problem = f"y={frac_str(a0)}-{frac_str(abs(b0))}に平行で、直線y={frac_str(a1)}-{frac_str(abs(b1))}とx軸と交わる一次関数の式を求めよ。"
     answer = format_linear(Aa, Ab)
     
