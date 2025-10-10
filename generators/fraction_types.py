@@ -35,3 +35,7 @@ def generate_type_frac():
         answer = f"{result.numerator}/{result.denominator}"
 
     return problem, answer
+
+    generators_fraction = [
+    generate_type_frac
+]
