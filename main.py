@@ -48,7 +48,7 @@ def format_linear(a, b):
         return f"y = {a_str} + {frac_str(b)}"
 
 
-# ----- 各タイプの問題関数はここにコピー -----
+# ----- 各タイプの問題関数 -----
 #タイプA　2点から式を決定
 def generate_type_a():
   #傾き0にならないように
@@ -126,10 +126,14 @@ def generate_type_e():
     x1, y1 = random.randint(-5,5), random.randint(-5,5)
   #切片計算
     b = Fraction(y1) - a2*Fraction(x1)
+    b0 = Fraction(non_zero_int(-5,5))
   #切片0になったら再設定
     if b == 0:
       b = Fraction(non_zero_int(-5,5),1)
-    problem = f"y={frac_str(a1)}x+{frac_str(non_zero_int(-5,5))}に平行で、点({x1},{y1})を通る一次関数の式を求めよ。"
+    if b0 > 0:
+      problem = f"y={frac_str(a1)}x+{frac_str(b0)}に平行で、点({x1},{y1})を通る一次関数の式を求めよ。"
+    elif:
+      problem = f"y={frac_str(a1)}x-{abs(frac_str(b0))}に平行で、点({x1},{y1})を通る一次関数の式を求めよ。"
     answer = format_linear(a2,b)
     
     return problem, answer
@@ -246,10 +250,14 @@ def generate_type_l():
     x1, y1 = random.randint(-5,5), random.randint(-5,5)
   #切片計算
     b = Fraction(y1) - a2*Fraction(x1)
+    b0 = Fraction(non_zero_int(-5,5))
   #切片0になったら再設定
     if b == 0:
       b = Fraction(non_zero_int(-5,5),1)
-    problem = f"y={frac_str(a1)}x+{frac_str(non_zero_int(-5,5))}に平行で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
+    if b0 > 0:
+      problem = f"y={frac_str(a1)}x+{frac_str(b0)}に平行で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
+    elif:
+      problem = f"y={frac_str(a1)}x-{abs(frac_str(b0))}に平行で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
     answer = format_linear(a2,b)
     
     return problem, answer
@@ -298,10 +306,14 @@ def generate_type_o():
     x1, y1 = random.randint(-5,5), random.randint(-5,5)
   #切片計算
     b = Fraction(y1) - a2*Fraction(x1)
+    b0  = Fraction(non_zero_int(-5,5))
   #切片0になったら再設定
     if b == 0:
       b = Fraction(non_zero_int(-5,5),1)
-    problem = f"y={frac_str(a1)}x+{frac_str(non_zero_int(-5,5))}に垂直で、点({x1},{y1})を通る一次関数の式を求めよ。"
+    if b0 > 0:
+      problem = f"y={frac_str(a1)}x+{frac_str(b0)}に垂直で、点({x1},{y1})を通る一次関数の式を求めよ。"
+    elif:
+      problem = f"y={frac_str(a1)}x-{abs(frac_str(b0))}に垂直で、点({x1},{y1})を通る一次関数の式を求めよ。"
     answer = format_linear(a2,b)
     
     return problem, answer
@@ -315,10 +327,14 @@ def generate_type_p():
     x1, y1 = random.randint(-5,5), random.randint(-5,5)
   #切片計算
     b = Fraction(y1) - a2*Fraction(x1)
+    b0 = Fraction(non_zero_int(-5,5))
   #切片0になったら再設定
     if b == 0:
       b = Fraction(non_zero_int(-5,5),1)
-    problem = f"y={frac_str(a1)}x+{frac_str(non_zero_int(-5,5))}に垂直で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
+    if b0 > 0:
+      problem = f"y={frac_str(a1)}x+{frac_str(b0)}に垂直で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
+    elif:
+      problem = f"y={frac_str(a1)}x-{abs(frac_str(b0))}に垂直で、x={x1}のときy={y1}となる一次関数の式を求めよ。"
     answer = format_linear(a2,b)
     
     return problem, answer
@@ -332,7 +348,10 @@ def generate_type_q():
   #傾き計算
     a = Fraction(y1) - b1 
     
-    problem = f"y={frac_str(non_zero_int(-5,5))}x+{frac_str(b1)}とy軸上で交わり、点({x1},{y1})を通る一次関数の式を求めよ。"
+    if b1 > 0:
+      problem = f"y={frac_str(non_zero_int(-5,5))}x+{frac_str(b1)}とy軸上で交わり、点({x1},{y1})を通る一次関数の式を求めよ。"
+    elif:
+      problem = f"y={frac_str(non_zero_int(-5,5))}x-{abs(frac_str(b1))}とy軸上で交わり、点({x1},{y1})を通る一次関数の式を求めよ。"
     answer = format_linear(a,b2)
     
     return problem, answer
@@ -346,7 +365,10 @@ def generate_type_r():
   #傾き計算
     a = Fraction(y1) - b1 
     
-    problem = f"y={frac_str(non_zero_int(-5,5))}x+{frac_str(b1)}とy軸上で交わり、x={x1}のときy={y1}となる一次関数の式を求めよ。"
+    if b1 > 0:
+      problem = f"y={frac_str(non_zero_int(-5,5))}x+{frac_str(b1)}とy軸上で交わり、x={x1}のときy={y1}となる一次関数の式を求めよ。"
+    elif:
+      problem = f"y={frac_str(non_zero_int(-5,5))}x-{abs(frac_str(b1))}とy軸上で交わり、x={x1}のときy={y1}となる一次関数の式を求めよ。"
     answer = format_linear(a,b2)
     
     return problem, answer
@@ -354,16 +376,25 @@ def generate_type_r():
 #タイプS　x軸上で交わる直線の式の求め方
 def generate_type_s():
     # 元の直線の傾きを決定
-    a = Fraction(non_zero_int(-5,5), 1)
+    a0 = Fraction(non_zero_int(-5,5), 1)
+    a1 = Fraction(non_zero_int(-5,5), 1)
 
-    # x軸と交わるのでy=0のときのxをランダムに決める
-    x_intercept = random.randint(-5, 5)
-    
-    # 切片bを計算：y = a*x + b => 0 = a*x_intercept + b => b = -a*x_intercept
-    b = -a * x_intercept
+    b0 = Fraction(non_zero_int(-5,5), 1)
+    b1 = Fraction(non_zero_int(-5,5), 1)
 
-    problem = f"傾きが{frac_str(a)}で、x軸と交わる一次関数の式を求めよ。"
-    answer = format_linear(a, b)
+    Aa = a0
+    temx = -b1 / a1
+    Ab = -a1 * temx
+
+    if b0 > 0 & b1 > 0:
+      problem = f"y={frac_str(a0)}+{frac_str(b0)}に平行で、直線y={frac_str(a1)}+{frac_str(b1)}とx軸と交わる一次関数の式を求めよ。"
+    elif b0 > 0 & b1 < 0:
+      problem = f"y={frac_str(a0)}+{frac_str(b0)}に平行で、直線y={frac_str(a1)}-{frac_str(abs(b1))}とx軸と交わる一次関数の式を求めよ。"
+    elif b0 < 0 & b1 > 0:
+      problem = f"y={frac_str(a0)}-{frac_str(abs(b0))}に平行で、直線y={frac_str(a1)}+{frac_str(b1)}とx軸と交わる一次関数の式を求めよ。"
+    elif:
+      problem = f"y={frac_str(a0)}-{frac_str(abs(b0))}に平行で、直線y={frac_str(a1)}-{frac_str(abs(b1))}とx軸と交わる一次関数の式を求めよ。"
+    answer = format_linear(Aa, Ab)
     
     return problem, answer
 
@@ -379,15 +410,15 @@ def generate_type_frac():
     f2 = Fraction(a2, b2)
 
     # 計算方法をランダムに選ぶ
-    op = random.choice(["+", "-", "*", "/"])
+    op = random.choice(["+", "-", "×", "÷"])
 
     if op == "+":
         result = f1 + f2
     elif op == "-":
         result = f1 - f2
-    elif op == "*":
+    elif op == "×":
         result = f1 * f2
-    elif op == "/":
+    elif op == "÷":
         result = f1 / f2
 
     # 問題文
@@ -409,7 +440,7 @@ def generate_problems(problem_type="linear", n=20):
     generate_type_e, generate_type_f, generate_type_g,
     generate_type_h, generate_type_i, generate_type_j, generate_type_k,
     generate_type_l, generate_type_m, generate_type_n,generate_type_o,
-    generate_type_p, generate_type_q, generate_type_r
+    generate_type_p, generate_type_q, generate_type_r,generate_type_s
 ]
     elif problem_type == "fraction":
         generators = [generate_type_frac]
