@@ -36,6 +36,6 @@ def generate_type_frac():
 
     return problem, answer
 
-    generators_fraction = [
+generators_fraction = [
     generate_type_frac
 ]
