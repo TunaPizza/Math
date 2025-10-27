@@ -5,7 +5,7 @@ def generate_expression():
     num = random.randint(2, 5)
     numbers = [non_zero_int(-9,9) for _ in range(num)]
     op = random.choice(["+", "-", "*", "/"], k = num - 1)
-     expr_parts = []
+    expr_parts = []
     for i in range(num - 1):
         expr_parts.append(f"({numbers[i]})")
         expr_parts.append(ops[i])
