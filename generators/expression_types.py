@@ -1,6 +1,7 @@
 from fractions import Fraction
 import random
 from utils import non_zero_int
+
 def generate_expression():
     num = random.randint(2, 5)
     numbers = [non_zero_int(-9,9) for _ in range(num)]

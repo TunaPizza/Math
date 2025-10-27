@@ -38,8 +38,8 @@ async def expression_page():
     const preview=document.getElementById('preview');
     const numInput=document.getElementById('num');
 
-    generateBtn.addEventListener('click', async()=>{const n=numInput.value;const res=await fetch(`/fraction/generate?n=${n}`);const data=await res.json();let text="";data.forEach((p,i)=>{text+=(i+1)+". "+p.problem+"\\n"});preview.textContent=text});
-    pdfBtn.addEventListener('click',()=>{const n=numInput.value;window.open(`/fraction/pdf?n=${n}`,'_blank')});
+    generateBtn.addEventListener('click', async()=>{const n=numInput.value;const res=await fetch(`/expression/generate?n=${n}`);const data=await res.json();let text="";data.forEach((p,i)=>{text+=(i+1)+". "+p.problem+"\\n"});preview.textContent=text});
+    pdfBtn.addEventListener('click',()=>{const n=numInput.value;window.open(`/expewsstion/pdf?n=${n}`,'_blank')});
     </script>
     </body>
     </html>
@@ -52,7 +52,7 @@ def expression_generate(n: int = 20):
     return JSONResponse(content=current_problems)
 
 @router.get("/pdf")
-def expression_pdf(filename="fraction.pdf"):
+def expression_pdf(filename="expression.pdf"):
     global current_problems
     if not current_problems:
         return JSONResponse(content={"error": "先に問題を生成してください"}, status_code=400)
