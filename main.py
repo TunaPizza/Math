@@ -8,6 +8,7 @@ app = FastAPI(title="プリント生成アプリ")
 # ルート登録
 app.include_router(linear_router, prefix="/linear", tags=["Linear"])
 app.include_router(fraction_router, prefix="/fraction", tags=["Fraction"])
+app.include_router(expression_router, prefix="/expression", tags=["Expression"])
 
 # ホームページ
 @app.get("/", response_class=HTMLResponse)
@@ -29,8 +30,8 @@ async def home():
         <ul>
             <li><a href="/linear">一次関数プリントページ</a></li>
             <li><a href="/fraction">分数プリントページ</a></li>
+            <li><a href="/fraction">四則計算プリントページ</a></li>
         </ul>
-        <p>今後ページを増やす場合は、<code>routes/</code> に追加し、ここで <code>include_router</code> するだけでOKです。</p>
     </body>
     </html>
     """
