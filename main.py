@@ -31,7 +31,7 @@ async def home():
         <ul>
             <li><a href="/linear">一次関数プリントページ</a></li>
             <li><a href="/fraction">分数プリントページ</a></li>
-            <li><a href="/fraction">四則計算プリントページ</a></li>
+            <li><a href="/expression">四則計算プリントページ</a></li>
         </ul>
     </body>
     </html>

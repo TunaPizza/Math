@@ -39,7 +39,7 @@ async def expression_page():
     const numInput=document.getElementById('num');
 
     generateBtn.addEventListener('click', async()=>{const n=numInput.value;const res=await fetch(`/expression/generate?n=${n}`);const data=await res.json();let text="";data.forEach((p,i)=>{text+=(i+1)+". "+p.problem+"\\n"});preview.textContent=text});
-    pdfBtn.addEventListener('click',()=>{const n=numInput.value;window.open(`/expewsstion/pdf?n=${n}`,'_blank')});
+    pdfBtn.addEventListener('click',()=>{const n=numInput.value;window.open(`/expression/pdf?n=${n}`,'_blank')});
     </script>
     </body>
     </html>
