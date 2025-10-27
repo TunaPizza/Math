@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from routes.linear_routes import router as linear_router
 from routes.fraction_routes import router as fraction_router
+from routes.expression_routes import router as expression_router
 
 app = FastAPI(title="プリント生成アプリ")
 
