@@ -10,7 +10,7 @@ def generate_expression():
     for i in range(num - 1):
         expr_parts.append(f"({numbers[i]})")
         expr_parts.append(op[i])
-    expr_parts.append(str(numbers[-1])")
+    expr_parts.append(str(numbers[-1]))
     expr = " ".join(expr_parts)
     
     # 括弧をランダムに1組追加（50%の確率）
