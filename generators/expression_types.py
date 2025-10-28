@@ -20,7 +20,7 @@ def generate_expression():
 
     try:
         answer = eval(expr)
-        answer = round(answer, 2)
+        answer = Fraction(answer_value).limit_denominator()
     except ZeroDivisionError:
         return generate_expression()
 
