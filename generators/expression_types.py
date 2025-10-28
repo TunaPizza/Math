@@ -26,7 +26,7 @@ def generate_expression():
 
     problem = expr.replace("*", "×").replace("/", "÷")
 
-    return problem, answer
+    return problem, str(answer)
 
 
 generators_expression = [
