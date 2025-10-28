@@ -32,3 +32,31 @@ def format_linear(a, b):
         return f"y = {a_str} - {frac_str(abs(b))}"
     else:
         return f"y = {a_str} + {frac_str(b)}"
+
+#問題の表記を整え
+def format_expression_parts(numbers, ops):
+    expr_parts = []
+
+    for i in range(len(ops)):
+        left = str(numbers[i])
+        right = str(numbers[i + 1])
+        op = ops[i]
+
+        # 右側が負の数の場合だけカッコで囲む
+        if numbers[i + 1] < 0:
+            right = f"({right})"
+
+        expr_parts.append(left)
+        expr_parts.append(op)
+        expr_parts.append(right)
+
+    # 重複追加防止のために最初の数字と演算子部分を整理
+    result = [str(numbers[0])]
+    for i in range(len(ops)):
+        op = ops[i]
+        right = str(numbers[i + 1])
+        if numbers[i + 1] < 0:
+            right = f"({right})"
+        result.extend([op, right])
+
+    return result
