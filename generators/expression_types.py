@@ -19,8 +19,10 @@ def generate_expression():
     expr = " ".join(expr_parts)
 
     try:
-        answer = eval(expr)
+        answer_value = eval(expr)
         answer = Fraction(answer_value).limit_denominator()
+        if answer.denominator == 1:
+            answer = answer.numerator  # 整数のときは分母を省略
     except ZeroDivisionError:
         return generate_expression()
 
@@ -29,6 +31,4 @@ def generate_expression():
     return problem, str(answer)
 
 
-generators_expression = [
-    generate_expression
-    ]
+generators_expression = [generate_expression]
