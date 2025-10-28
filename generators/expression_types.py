@@ -3,14 +3,14 @@ import random
 from utils import non_zero_int
 
 def generate_expression():
-    num = random.randint(2, 5)
+    num = random.randint(2, 4)
     numbers = [non_zero_int(-9,9) for _ in range(num)]
     op = random.choices(["+", "-", "*", "/"], k = num-1)
     expr_parts = []
     for i in range(num - 1):
         expr_parts.append(f"({numbers[i]})")
         expr_parts.append(op[i])
-    expr_parts.append(f"({numbers[-1]})")
+    expr_parts.append(str(numbers[-1])")
     expr = " ".join(expr_parts)
     
     # 括弧をランダムに1組追加（50%の確率）
