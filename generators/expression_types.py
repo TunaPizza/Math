@@ -8,7 +8,7 @@ def generate_expression():
     op = random.choices(["+", "-", "*", "/"], k = num-1)
     expr_parts = []
     for i in range(num - 1):
-        expr_parts.append(f"({numbers[i]})")
+        expr_parts.append(str({numbers[i]}))
         expr_parts.append(op[i])
     expr_parts.append(str(numbers[-1]))
     expr = " ".join(expr_parts)
