@@ -38,7 +38,7 @@ async def algebra_page():
     const preview=document.getElementById('preview');
     const numInput=document.getElementById('num');
 
-    generateBtn.addEventListener('click', async()=>{const n=numInput.value;const res=await fetch(`/falgebra/generate?n=${n}`);const data=await res.json();let text="";data.forEach((p,i)=>{text+=(i+1)+". "+p.problem+"\\n"});preview.textContent=text});
+    generateBtn.addEventListener('click', async()=>{const n=numInput.value;const res=await fetch(`/algebra/generate?n=${n}`);const data=await res.json();let text="";data.forEach((p,i)=>{text+=(i+1)+". "+p.problem+"\\n"});preview.textContent=text});
     pdfBtn.addEventListener('click',()=>{const n=numInput.value;window.open(`/algebra/pdf?n=${n}`,'_blank')});
     </script>
     </body>
