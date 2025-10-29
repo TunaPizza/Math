@@ -60,3 +60,29 @@ def format_expression_parts(numbers, ops):
         result.extend([op, right])
 
     return result
+
+def format_algebra_expression(coef, var, const=0):
+    if coef == 0:
+        expr = ""
+    elif coef == 1:
+        expr = var
+    elif coef == -1:
+        expr = f"-{var}"
+    else:
+        expr = f"{coef}{var}"
+
+    # --- 定数部分 ---
+    if const > 0:
+        if expr:
+            expr += f" + {const}"
+        else:
+            expr = f"{const}"
+    elif const < 0:
+        if expr:
+            expr += f" - {abs(const)}"
+        else:
+            expr = f"-{abs(const)}"
+    elif coef == 0:
+        expr = "0"
+
+    return expr
