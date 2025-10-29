@@ -11,7 +11,7 @@ app = FastAPI(title="プリント生成アプリ")
 app.include_router(linear_router, prefix="/linear", tags=["Linear"])
 app.include_router(fraction_router, prefix="/fraction", tags=["Fraction"])
 app.include_router(expression_router, prefix="/expression", tags=["Expression"])
-app.include_router(alegebra_router, prefix="/alegebra", tags=["Alegebra"])
+app.include_router(algebra_router, prefix="/alegebra", tags=["Alegebra"])
 
 # ホームページ
 @app.get("/", response_class=HTMLResponse)
@@ -34,6 +34,7 @@ async def home():
             <li><a href="/linear">一次関数プリントページ</a></li>
             <li><a href="/fraction">分数プリントページ</a></li>
             <li><a href="/expression">四則計算プリントページ</a></li>
+            <li><a href="/alegebra">文字式プリントページ</a></li>
         </ul>
     </body>
     </html>
