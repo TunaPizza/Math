@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse
 from routes.linear_routes import router as linear_router
 from routes.fraction_routes import router as fraction_router
 from routes.expression_routes import router as expression_router
+from routes.algebra_routes import router as algebra_router
 
 app = FastAPI(title="プリント生成アプリ")
 
@@ -10,6 +11,7 @@ app = FastAPI(title="プリント生成アプリ")
 app.include_router(linear_router, prefix="/linear", tags=["Linear"])
 app.include_router(fraction_router, prefix="/fraction", tags=["Fraction"])
 app.include_router(expression_router, prefix="/expression", tags=["Expression"])
+app.include_router(alegebra_router, prefix="/alegebra", tags=["Alegebra"])
 
 # ホームページ
 @app.get("/", response_class=HTMLResponse)
